@@ -1,0 +1,8 @@
+package titan.native.c.impl;
+
+public class StdioImpl implements Stdio{
+
+@OrdinaryFunction
+int printf ( final char * format, ... );
+
+}

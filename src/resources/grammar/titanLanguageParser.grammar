@@ -1,0 +1,99 @@
+
+/*
+*
+* titan language parser
+*
+*/
+
+
+@StartGrammar compilationUnit ;
+
+@NonterminalGrammar begin ;
+
+visibilityModifier : 'public' ;
+
+moduleIdentifier :
+     Identifier ('::' Identifier)*
+;
+
+type :
+     Identifier ('::' Identifier)*
+;
+
+functionReturnDeclaration :
+  '->' type
+;
+
+callParams :
+    expression (',' expression)*
+;
+
+identifierExpression :
+    Identifier ('::' Identifier)*
+;
+
+literalExpression :
+   IntegerLiteral
+   | StringLiteral
+;
+
+expression :
+      identifierExpression                                 #IdentifierExpression
+      | literalExpression                                  #LiteralExpression
+      | expression '(' callParams? ')'                     #CallExpression
+      | 'return' expression?                               #ReturnExpression
+;
+
+expressionStatement :
+   expression ';'
+   ;
+
+statement :
+   ';'
+   | expressionStatement
+   ;
+
+statements :
+   statement+
+   ;
+
+blockExpression :
+    '{' statements? '}'
+;
+
+functionHeader :
+  visibilityModifier? Identifier '(' ')' functionReturnDeclaration?
+;
+
+functionDeclaration :
+   functionHeader blockExpression
+;
+
+variableDeclaration :
+  type
+;
+
+variableDeclarationStatement :
+   variableDeclaration ';'
+;
+
+moduleBodyDeclaration :
+     functionDeclaration
+     | variableDeclarationStatement
+     ;
+
+useDeclaration : 'use' moduleIdentifier ';' ;
+
+moduleBody :
+   useDeclaration* moduleBodyDeclaration*
+;
+
+module :
+    'module' moduleIdentifier '{' moduleBody '}'
+;
+
+compilationUnit :
+  module+
+;
+
+@NonterminalGrammar end ;

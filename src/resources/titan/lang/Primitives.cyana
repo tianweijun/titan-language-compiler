@@ -1,0 +1,173 @@
+package titan.lang;
+
+public interface Concept {
+}
+
+@Implement("compiler")
+public interface Scope extends Concept {}
+
+/**
+* 纯数据类型。
+*/
+public interface Data extends Concept {}
+
+/**
+* calss指针+数据（可能为空）的序列。
+*/
+public interface Object extends Concept {
+
+/**
+* 所有的实例都能调用这个方法.
+*/
+  @Implement("compiler")
+  Class getClass();
+}
+
+public interface Function extends Data{}
+
+@Implement("compiler")
+public final class Pointer<T> extends Data{
+   public void setValue(T value);
+   public T getValue();
+
+   public static <T> Pointer<T> wrap(T value);
+}
+
+@Implement("compiler")
+public final class Reference<T> extends Data{
+   public static Reference<T> getReference(T value);
+}
+
+@Implement("compiler")
+public final class Char extends Data{}
+
+public interface Number extends Data{}
+
+@Implement("compiler")
+public final class Int8 implements Number{
+
+     @ClassConversion(32)
+     public static Int32 convertInt8ToInt32(Int8 number);
+
+     @ClassConversion(33)
+     public static Int convertInt8ToInt(Int8 number);
+
+     @ClassConversion(33)
+     public static Int convertInt32ToInt(Int32 number);
+
+     @ClassConversion(32)
+     public static Int32 convertIntToInt32(Int number);
+}
+
+@Implement("compiler")
+public final class Int16 implements Number{}
+
+@Implement("compiler")
+public final class Int32 implements Number{
+
+   @Inline
+   @OperatorOverloading(value={"+"},index={1})
+   public static Int32 add(Int32 number1,String addOperator,Int32 number2);
+}
+
+@Implement("compiler")
+public final class Int64 implements Number{}
+
+@Implement("compiler")
+public final class Uint8 implements Number{}
+
+@Implement("compiler")
+public final class Uint16 implements Number{}
+
+@Implement("compiler")
+public final class Uint32 implements Number{}
+
+@Implement("compiler")
+public final class Uint64 implements Number{}
+
+@Implement("compiler")
+public final class Short implements Number{}
+
+@Implement("compiler")
+public final class Int implements Number{
+
+   @Inline
+   @OperatorOverloading(value={"+"},index={1})
+   public static Int add(Int number1,String operator,Int number2);
+}
+
+@Implement("compiler")
+public final class Long implements Number{}
+
+@Implement("compiler")
+public final class Float32 implements Number{}
+
+@Implement("compiler")
+public final class Float64 implements Number{}
+
+@Implement("compiler")
+public final class Float implements Number{}
+
+@Implement("compiler")
+public final class Double implements Number{}
+
+@Implement("compiler")
+public final class Byte extends Data{}
+
+@Implement("compiler")
+public final class Word extends Data{}
+
+@Implement("compiler")
+public final class Dword extends Data{}
+
+@Implement("compiler")
+public final class Qword extends Data{}
+
+public interface Enum extends Concept {}
+
+public final class Bool implements Enum{
+  TRUE(1),
+  FALSE(0);
+
+  private Uint8 value;
+
+  Bool(Uint8 value) {
+    this.value = value;
+  }
+
+  public Uint8 getValue() {
+    return value;`
+  }
+}
+
+public interface CompositeData extends Data{}
+
+public interface Struct extends CompositeData{}
+
+public interface Union extends CompositeData{}
+
+public interface Generic extends Object{}
+
+public final class String implements Struct{
+    public int length;
+    public Char[] chars;
+}
+
+public interface Annotation extends Struct{}
+
+/**
+* 编译器自己实现，仅由编译器自行调用，开发者无法使用。
+* Array的特殊性，array的定义，是以类的名字配多个[num]来定义，
+* 虽然不是Array来定义，但也同样是实现了Array接口的。
+* 每一个Array实例都会绑定其对应的class。
+* 内存结构就是连续的T类型数据。
+* Int[]==(ArrayClass{classInstance,IntClass...})
+*/
+@Implement("compiler")
+public Interface Array extends CompositeData{}
+
+public  interface Class extends Object{
+
+    @Implement("compiler")
+    public static Class forName(String className);
+}

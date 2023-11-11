@@ -1,0 +1,9 @@
+package titan.lang;
+
+@Implement("compiler")
+public class GlobalOperatorOverloading{
+
+  @OperatorOverloading(value={"(",")"},index={0,2})
+  public static <R,V> R typeCast(String openBracket,R result,String closeBracket,V value);
+
+}
