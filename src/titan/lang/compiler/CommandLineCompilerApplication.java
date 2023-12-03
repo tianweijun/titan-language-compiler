@@ -12,7 +12,7 @@ public class CommandLineCompilerApplication {
   public void run(String[] args) {
     CommandLineParameters commandLineParameters = new CommandLineParameters(args);
     CompilerApplication compilerApplication = new CompilerApplication();
-    compilerApplication.run(commandLineParameters.toLanguageUserConfig());
+    compilerApplication.run(commandLineParameters.toCrateConfig());
   }
 
   public static void main(String[] args) {

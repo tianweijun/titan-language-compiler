@@ -1,11 +1,7 @@
 package titan.lang.compiler.input;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import titan.json.Json;
-import titan.lang.compiler.config.LangUserCompilerConfig;
-import titan.lang.compiler.exception.CompilerRuntimeException;
+import titan.lang.compiler.config.CrateConfig;
+import titan.lang.compiler.config.CrateConfigBuilder;
 
 /**
  * .
@@ -34,13 +30,7 @@ public class CommandLineParameters {
     }
   }
 
-  public LangUserCompilerConfig toLanguageUserConfig() {
-    LangUserCompilerConfig userCompilerConfig = null;
-    try (InputStream jsonInputStream = new FileInputStream(configurationFilePath)) {
-      userCompilerConfig = Json.fromJson(jsonInputStream, LangUserCompilerConfig.class);
-    } catch (IOException e) {
-      throw new CompilerRuntimeException(e);
-    }
-    return userCompilerConfig;
+  public CrateConfig toCrateConfig() {
+    return new CrateConfigBuilder().build(configurationFilePath);
   }
 }

@@ -8,7 +8,7 @@ public class LanguageCompilerTest {
     args =
         new String[] {
           "-configurationFilePath",
-          "D:\\github-pro\\titan\\titan-language-compiler\\test\\helloworld\\config.json"
+          "D:\\github-pro\\titan\\titan-language-compiler\\test\\helloworld\\crateConfig.json"
         };
 
     CommandLineCompilerApplication compiler = new CommandLineCompilerApplication();

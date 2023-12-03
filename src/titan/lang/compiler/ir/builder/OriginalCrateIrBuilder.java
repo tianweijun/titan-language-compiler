@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import titan.lang.compiler.config.LangCrateCompilerConfig;
-import titan.lang.compiler.context.LanguageCompilerContext;
+import titan.lang.compiler.config.CrateConfig;
+import titan.lang.compiler.context.CompilerContext;
 import titan.lang.compiler.ir.context.OriginalCrateRuntimeContext;
 import titan.lang.compiler.util.FileUtil;
 
@@ -24,17 +24,17 @@ public class OriginalCrateIrBuilder {
     OriginalModuleBuilder originalModuleBuilder = new OriginalModuleBuilder();
     originalCrateRuntimeContext.crate.modules.addAll(originalModuleBuilder.build(moduleFilePaths));
     // set result
-    LanguageCompilerContext.get().originalCrateRuntimeContext = originalCrateRuntimeContext;
+    CompilerContext.get().originalCrateRuntimeContext = originalCrateRuntimeContext;
   }
 
   private Set<String> getModuleFilePaths() {
     Set<String> moduleFilePaths = new HashSet<>();
     // config
-    LanguageCompilerContext languageCompilerContext = LanguageCompilerContext.get();
-    LangCrateCompilerConfig crateCompilerConfig =
-        languageCompilerContext.languageCompilerConfig.crateCompilerConfig;
+    CompilerContext compilerContext = CompilerContext.get();
+    CrateConfig crateConfig =
+        compilerContext.crateConfig;
     // sourceCodeFilePaths
-    String[] sourceCodeFilePaths = crateCompilerConfig.sourceCodeFilePaths;
+    String[] sourceCodeFilePaths = crateConfig.sourceCodeFilePaths;
     String SOURCE_FILE_NAME_SUFFIX = ".titan";
     if (null != sourceCodeFilePaths && sourceCodeFilePaths.length > 0) {
       for (String sourceCodeFilePath : sourceCodeFilePaths) {
@@ -44,7 +44,7 @@ public class OriginalCrateIrBuilder {
       }
     }
     // sourceCodeFileDirectories
-    String[] sourceCodeFileDirectories = crateCompilerConfig.sourceCodeFileDirectories;
+    String[] sourceCodeFileDirectories = crateConfig.sourceCodeFileDirectories;
     if (null != sourceCodeFileDirectories && sourceCodeFileDirectories.length > 0) {
       for (String fileDirectory : sourceCodeFileDirectories) {
         List<File> sourceCodeFiles = FileUtil.getAllFiles(fileDirectory);

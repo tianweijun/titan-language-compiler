@@ -1,11 +1,11 @@
 package titan.lang.compiler.config;
 
 /**
- * LangUserCompilerConfig.
+ * .
  *
  * @author tian wei jun
  */
-public class LangUserCompilerConfig {
+public class CrateConfig {
 
   public String crateName = null;
   public String crateEntry = null;
@@ -19,8 +19,5 @@ public class LangUserCompilerConfig {
   public String crateType = null;
   public String outputFilePath = null;
 
-  public String[] assembleInstructionSets = null;
-  public String os = null;
-  public int defaultOperandSize = 0;
-  public int defaultAddressSize = 0;
+
 }
