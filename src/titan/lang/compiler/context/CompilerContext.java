@@ -1,11 +1,15 @@
 package titan.lang.compiler.context;
 
+import java.io.IOException;
+import java.io.InputStream;
+import titan.ast.runtime.RuntimeAutomataAstApplication;
 import titan.lang.compiler.config.CompilerEnvConfig;
 import titan.lang.compiler.config.CompilerEnvConfigBuilder;
 import titan.lang.compiler.config.CrateConfig;
 import titan.lang.compiler.config.RootCompilerConfig;
 import titan.lang.compiler.config.RootCompilerConfigBuilder;
-import titan.lang.compiler.ir.context.OriginalCrateRuntimeContext;
+import titan.lang.compiler.exception.CompilerRuntimeException;
+import titan.lang.compiler.ir.context.OriginalCrateContext;
 
 /**
  * context.
@@ -19,7 +23,9 @@ public class CompilerContext {
   public RootCompilerConfig rootCompilerConfig = null;
   public CompilerEnvConfig compilerEnvConfig = null;
   public CrateConfig crateConfig = null;
-  public OriginalCrateRuntimeContext originalCrateRuntimeContext = null;
+  public OriginalCrateContext originalCrateContext = null;
+
+  RuntimeAutomataAstApplication astApplication = null;
 
   /**
    * 初始化并生成一个当前应用程序的 上下文.
@@ -47,5 +53,20 @@ public class CompilerContext {
 
   public static CompilerContext get() {
     return contextThreadLocal.get();
+  }
+
+  public RuntimeAutomataAstApplication getAstApplication() {
+    if (null == astApplication) {
+      astApplication = new RuntimeAutomataAstApplication();
+      try (InputStream automataInputStream =
+          this.getClass()
+              .getClassLoader()
+              .getResourceAsStream("grammar/titanLangGrammar.automata")) {
+        astApplication.setContext(automataInputStream);
+      } catch (IOException e) {
+        throw new CompilerRuntimeException(e);
+      }
+    }
+    return astApplication;
   }
 }

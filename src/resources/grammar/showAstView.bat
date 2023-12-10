@@ -1,3 +1,3 @@
-java -jar  D:\github-pro\titan\titan-ast\out\artifacts\titan_ast_jar\titan-ast.jar  -automataFilePath titanLangGrammar.automata -sourceFilePath  D:\github-pro\titan\titan-language\test\helloworld\helloworld.titan --graphicalViewOfAst
+java -jar  D:\github-pro\titan\titan-ast\out\artifacts\titan_ast_jar\titan-ast.jar  -automataFilePath titanLangGrammar.automata -sourceFilePath  D:\github-pro\titan\titan-language-compiler\test\helloworld\helloworld.titan --graphicalViewOfAst
 :: java -Xdebug -Xrunjdwp:transport=dt_socket,address=5005,server=y,suspend=y -jar  D:\github-pro\titan\titan-ast\out\artifacts\titan_ast_jar\titan-ast.jar  -automataFilePath titanLangGrammar.automata -sourceFilePath  D:\github-pro\titan\titan-language\test\helloworld\helloworld.titan --graphicalViewOfAst
 @pause

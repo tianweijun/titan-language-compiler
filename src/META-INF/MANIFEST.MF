@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: titan.lang.compiler.CommandLineCompilerApplication
+Class-Path: titan-json.jar titan-ast-runtime.jar
+

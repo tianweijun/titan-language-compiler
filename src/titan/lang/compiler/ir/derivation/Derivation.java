@@ -1,4 +1,4 @@
-package titan.lang.compiler.ir.ast.derivation;
+package titan.lang.compiler.ir.derivation;
 
 /**
  * .

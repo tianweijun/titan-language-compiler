@@ -1,4 +1,4 @@
-package titan.lang.compiler.ir.builder;
+package titan.lang.compiler.ir.original;
 
 import java.io.File;
 import java.util.HashSet;
@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import titan.lang.compiler.config.CrateConfig;
 import titan.lang.compiler.context.CompilerContext;
-import titan.lang.compiler.ir.context.OriginalCrateRuntimeContext;
 import titan.lang.compiler.util.FileUtil;
 
 /**
@@ -14,28 +13,17 @@ import titan.lang.compiler.util.FileUtil;
  *
  * @author tian wei jun
  */
-public class OriginalCrateIrBuilder {
+public class ModuleFilePathsFinder {
+  private static final String SOURCE_FILE_NAME_SUFFIX = ".titan";
 
-  /** 完成对OriginalCrateRuntimeContext的构建. */
-  public void build() {
-    OriginalCrateRuntimeContext originalCrateRuntimeContext = new OriginalCrateRuntimeContext();
-    Set<String> moduleFilePaths = getModuleFilePaths();
-    // buildModules
-    OriginalModuleBuilder originalModuleBuilder = new OriginalModuleBuilder();
-    originalCrateRuntimeContext.crate.modules.addAll(originalModuleBuilder.build(moduleFilePaths));
-    // set result
-    CompilerContext.get().originalCrateRuntimeContext = originalCrateRuntimeContext;
-  }
-
-  private Set<String> getModuleFilePaths() {
+  public Set<String> getModuleFilePaths() {
     Set<String> moduleFilePaths = new HashSet<>();
     // config
     CompilerContext compilerContext = CompilerContext.get();
-    CrateConfig crateConfig =
-        compilerContext.crateConfig;
+    CrateConfig crateConfig = compilerContext.crateConfig;
     // sourceCodeFilePaths
     String[] sourceCodeFilePaths = crateConfig.sourceCodeFilePaths;
-    String SOURCE_FILE_NAME_SUFFIX = ".titan";
+
     if (null != sourceCodeFilePaths && sourceCodeFilePaths.length > 0) {
       for (String sourceCodeFilePath : sourceCodeFilePaths) {
         if (sourceCodeFilePath.endsWith(SOURCE_FILE_NAME_SUFFIX)) {
