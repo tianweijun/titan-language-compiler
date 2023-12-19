@@ -3,7 +3,6 @@ package titan.lang.compiler.ir.original.ast;
 import titan.ast.runtime.Ast;
 import titan.ast.runtime.RuntimeAutomataAstApplication;
 import titan.lang.compiler.context.CompilerContext;
-import titan.lang.compiler.ir.original.ast.node.ContextAst;
 
 /**
  * .

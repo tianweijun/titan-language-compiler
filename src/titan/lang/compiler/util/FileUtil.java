@@ -1,8 +1,11 @@
 package titan.lang.compiler.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import titan.lang.compiler.exception.CompilerRuntimeException;
+
 /**
  * .
  *
@@ -38,5 +41,29 @@ public class FileUtil {
     }
 
     return fileList;
+  }
+
+  public static File makeFile(String filePath) {
+    File file = new File(filePath);
+    if (file.exists()) {
+      return file;
+    }
+    File fileParent = file.getParentFile();
+    if (!fileParent.exists()) {
+      boolean mkdirs = fileParent.mkdirs();
+      if (!mkdirs) {
+        throw new CompilerRuntimeException("mkdirs failed at makeFile method in FileUtil");
+      }
+    }
+
+    try {
+      boolean hasCreated = file.createNewFile();
+      if (!hasCreated) {
+        throw new CompilerRuntimeException("mkdirs failed at makeFile method in FileUtil");
+      }
+    } catch (IOException e) {
+      throw new CompilerRuntimeException(e);
+    }
+    return file;
   }
 }

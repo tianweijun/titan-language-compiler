@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import titan.lang.compiler.ir.derivation.Derivation;
-import titan.lang.compiler.ir.original.ast.node.ContextAst;
+import titan.lang.compiler.ir.original.ast.ContextAst;
 import titan.lang.compiler.ir.shared.SharedIrModule;
 
 /**

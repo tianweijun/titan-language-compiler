@@ -6,7 +6,7 @@
 */
 
 @TerminalGrammar begin ;
-Comment acceptWhenFirstArriveAtTerminalState()
+Comment laziness()
     :   '/*'  AnyOneChar* '*/' -> skip
     ;
 
@@ -18,23 +18,51 @@ WordSpace
     :  [\s\t\r\n]+ -> skip
     ;
 
-// binary operator
-PathSeparator : '::' ;
-Arrow : '->' ;
 
-// unary operator
-Semi : ';' ;
 LeftBrace : '{' ;
 RightBrace : '}' ;
 LeftParen : '(' ;
 RightParen : ')' ;
+
+Semi : ';' ;
 Comma : ',' ;
+Colon : ':' ;
+Dot : '.' ;
+
+Plus    : '+' ;
+Minus   : '-' ;
+Star    : '*' ;
+Slash   : '/' ;
+Mod     : '%' ;
+
+BitAnd : '&' ;
+BitOr : '|' ;
+BitXor : '^' ;
+BitNot : '~' ;
+
+Gt : '>' ;
+Lt : '<' ;
+
+Assign : '=' ;
+
+Or : '|' ;
+Not : '!' ;
+
+Question : '?' ;
 
 // KeyWord
+Crate : 'crate' ;
 Module : 'module' ;
 Use : 'use' ;
+This : 'this' ;
+SelfValue : 'self' ;
+SelfType : 'Self' ;
+Function : 'function' ;
 Public : 'public' ;
 Return : 'return' ;
+Let : 'let' ;
+For : 'for' ;
+In : 'in' ;
 
 IntegerLiteral :
   DecimalLiteral

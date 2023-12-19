@@ -10,86 +10,272 @@
 
 @NonterminalGrammar begin ;
 
-visibilityModifier : 'public' ;
+// --------------------expression start-------------------------
 
-moduleIdentifier :
-     Identifier ('::' Identifier)*
+expressionName :
+  Identifier ( '.' Identifier )*
 ;
 
-type :
-     Identifier ('::' Identifier)*
-;
-
-functionReturnDeclaration :
-  '->' type
-;
-
-callParams :
-    expression (',' expression)*
-;
-
-identifierExpression :
-    Identifier ('::' Identifier)*
-;
-
-literalExpression :
+literal :
    IntegerLiteral
    | StringLiteral
 ;
 
 expression :
-      identifierExpression                                 #IdentifierExpression
-      | literalExpression                                  #LiteralExpression
-      | expression '(' callParams? ')'                     #CallExpression
-      | 'return' expression?                               #ReturnExpression
+   assignmentExpression
+   | rangeExpression
+;
+
+assignmentExpression :
+  conditionalExpression
+	|	assignment
+;
+
+assignment :
+  leftSideOfAssignment assignmentOperator expression
+	;
+
+leftSideOfAssignment :
+  expressionName
+;
+
+assignmentOperator :
+  '='
+  | '+' '='
+	;
+
+conditionalExpression :
+  rangeExpression
+	|	rangeExpression '?' expression ':' conditionalExpression
+;
+
+rangeExpression :
+   conditionalOrExpression
+   | conditionalOrExpression '.' '.' conditionalOrExpression
+   | conditionalOrExpression '.' '.' '=' conditionalOrExpression
+;
+
+conditionalOrExpression :
+  conditionalAndExpression
+	|	conditionalOrExpression '|' '|' conditionalAndExpression
+;
+
+conditionalAndExpression :
+  inclusiveOrExpression
+	|	conditionalAndExpression '&' '&' inclusiveOrExpression
+;
+
+inclusiveOrExpression :
+  exclusiveOrExpression
+	|	inclusiveOrExpression '|' exclusiveOrExpression
+;
+
+exclusiveOrExpression :
+  andExpression
+	|	exclusiveOrExpression '^' andExpression
+;
+
+andExpression :
+  equalityExpression
+	|	andExpression '&' equalityExpression
+;
+
+equalityExpression :
+  relationalExpression
+	|	equalityExpression '=' '=' relationalExpression
+	|	equalityExpression '!' '=' relationalExpression
+;
+
+relationalExpression :
+  shiftExpression
+	|	relationalExpression '<' shiftExpression
+	|	relationalExpression '>' shiftExpression
+	|	relationalExpression '<' '=' shiftExpression
+	|	relationalExpression '>' '=' shiftExpression
+;
+
+shiftExpression :
+  additiveExpression
+	|	shiftExpression '<' '<' additiveExpression
+	|	shiftExpression '>' '>' additiveExpression
+	|	shiftExpression '>' '>' '>' additiveExpression
+;
+
+additiveExpression :
+  multiplicativeExpression
+	|	additiveExpression '+' multiplicativeExpression
+	|	additiveExpression '-' multiplicativeExpression
+;
+
+multiplicativeExpression :
+  unaryExpression
+	|	multiplicativeExpression '*' unaryExpression
+	|	multiplicativeExpression '/' unaryExpression
+	|	multiplicativeExpression '%' unaryExpression
+;
+
+unaryExpression :
+	unaryExpressionNotPlusMinus
+  | '+' unaryExpression
+	|	'-' unaryExpression
+;
+
+unaryExpressionNotPlusMinus :
+  postfixExpression
+	|	'~' unaryExpression
+	|	'!' unaryExpression
+	;
+
+postfixExpression :
+	expressionName
+	| primary
+;
+
+primary :
+  // (
+    primaryNoNewArray_lfno_primary
+		// |	arrayCreationExpression
+	// )
+
+	// primaryNoNewArray_lf_primary*
+;
+
+primaryNoNewArray_lfno_primary :
+   literal
+   | 'this'
+   | 'self'
+   | methodInvocation
+   | '(' expression ')'
+;
+
+methodInvocation :
+   Identifier '(' argumentList? ')'
+;
+
+argumentList :
+   expression (',' expression)*
+;
+
+// --------------------expression end-------------------------
+
+// --------------------statement start-------------------------
+
+emptyStatement :
+   ';'
 ;
 
 expressionStatement :
    expression ';'
-   ;
-
-statement :
-   ';'
-   | expressionStatement
-   ;
-
-statements :
-   statement+
-   ;
-
-blockExpression :
-    '{' statements? '}'
 ;
 
-functionHeader :
-  visibilityModifier? Identifier '(' ')' functionReturnDeclaration?
+returnStatement :
+     'return' expression? ';'
 ;
 
-functionDeclaration :
-   functionHeader blockExpression
+
+identifierPattern :
+   Identifier
 ;
 
-variableDeclaration :
-  type
+patternWithoutRange :
+    identifierPattern
 ;
 
-variableDeclarationStatement :
-   variableDeclaration ';'
+patternNoTopAlt :
+   patternWithoutRange
 ;
 
-moduleBodyDeclaration :
-     functionDeclaration
-     | variableDeclarationStatement
+pattern :
+     patternNoTopAlt ('|' patternNoTopAlt)*
+;
+
+letStatement :
+   'let' pattern (':' type)? ('=' expression)? ';'
+;
+
+loopBlockItem :
+     emptyStatement
+     | expressionStatement
+     | letStatement
+     | returnStatement
+     | loopStatement
+;
+
+loopBlock :
+ '{' loopBlockItem* '}'
+;
+
+iteratorLoopStatement :
+   'for' pattern 'in' expression loopBlock
+;
+
+loopStatement :
+  iteratorLoopStatement
+;
+
+// --------------------statement end-------------------------
+
+visibility : 'public' ;
+
+moduleIdentifier :
+     Identifier (':' ':' Identifier)*
+;
+
+type :
+     Identifier (':' ':' Identifier)*
+;
+
+functionReturnType :
+  '-' '>' type
+;
+
+selfParam :
+   'self'
+   | 'this'
+;
+
+functionParam :
+   Identifier ':' type
+;
+
+functionParameters :
+   selfParam
+   | (selfParam ',')? functionParam (',' functionParam)*
+;
+
+functionBlockItem :
+     emptyStatement
+     | expressionStatement
+     | letStatement
+     | returnStatement
+     | loopStatement
+;
+
+functionBlock :
+	'{' functionBlockItem* '}'
+;
+
+functionBody :
+  functionBlock
+  | ';'
+;
+
+function :
+   visibility? Function Identifier '(' functionParameters? ')' functionReturnType? functionBody
+;
+
+moduleBodyItem :
+     function
      ;
 
 useDeclaration : 'use' moduleIdentifier ';' ;
 
 moduleBody :
-   useDeclaration* moduleBodyDeclaration*
+   '{' useDeclaration* moduleBodyItem* '}'
 ;
 
 module :
-    'module' moduleIdentifier '{' moduleBody '}'
+    visibility? 'module' moduleIdentifier moduleBody
 ;
 
 compilationUnit :
